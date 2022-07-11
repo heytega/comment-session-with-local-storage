@@ -29,7 +29,7 @@ const Comment = ({
   const handleEdit = (e) => {
     e.preventDefault();
 
-    if (editContent !== content) {
+    if (editContent !== content && editContent.length > 0) {
       const updatedComment = { id, createdAt, score, user, replies, edited };
       updateComment({
         ...updatedComment,
@@ -40,12 +40,8 @@ const Comment = ({
     }
 
     if (editContent === content) {
-      cancelEdit();
+      endProcess();
     }
-  };
-
-  const cancelEdit = () => {
-    endProcess();
   };
 
   return (
@@ -79,7 +75,7 @@ const Comment = ({
                 ></textarea>
               </div>
               <div className="buttonContainer">
-                <button className="cancel" onClick={() => cancelEdit()}>
+                <button className="cancel" onClick={() => endProcess()}>
                   CANCEL
                 </button>
                 <button

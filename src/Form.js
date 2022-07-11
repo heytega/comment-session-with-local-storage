@@ -8,14 +8,17 @@ const Form = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addComment({
-      id: new Date().getTime().toString(),
-      content,
-      createdAt: new Date().toISOString(),
-      score: 0,
-      user: currentUser,
-      replies: [],
-    });
+
+    if (content.length > 0) {
+      addComment({
+        id: new Date().getTime().toString(),
+        content,
+        createdAt: new Date().toISOString(),
+        score: 0,
+        user: currentUser,
+        replies: [],
+      });
+    }
     setContent("");
   };
 

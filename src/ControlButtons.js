@@ -30,7 +30,13 @@ const ControlButtons = ({
   return (
     <>
       {user.username === currentUser.username ? (
-        <div className="currentUser-btn comment-btn">
+        <div
+          className={
+            isEditing
+              ? "currentUser-btn comment-btn hideActionBtn"
+              : "currentUser-btn comment-btn"
+          }
+        >
           <button
             className="comment-btn delete-btn"
             onClick={() => isEditing === false && setShowDeleteDialogue(true)}

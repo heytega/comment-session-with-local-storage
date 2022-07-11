@@ -40,9 +40,14 @@ export const AppProvider = ({ children }) => {
     setProcessEdit(true);
   };
 
+  // const editComment = () => {
+  //   setEdit(true);
+  //   setProcessEdit(true);
+  // };
+
   const endProcess = () => {
     setProcessEdit(false);
-    setEdit(null);
+    setEdit(false);
   };
 
   // const handleReply = () => {

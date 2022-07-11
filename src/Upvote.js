@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const Upvote = ({ existingScore, id, isEditing }) => {
   const [noOfVote, setNoOfVote] = useState(existingScore);
-  const [canVote, setCanVote] = useState(true);
+  // const [canVote, setCanVote] = useState(true);
 
   // const downVote = () => {
   //   if (canVote && noOfVote > 0) {
@@ -11,12 +11,10 @@ const Upvote = ({ existingScore, id, isEditing }) => {
   // };
 
   return (
-    <section className="upvote">
+    <section className={isEditing ? "upvote hideUpvote" : "upvote"}>
       <div className="upvote-button">
         <button
-          onClick={() =>
-            isEditing === false && canVote && setNoOfVote(noOfVote + 1)
-          }
+          onClick={() => isEditing === false && setNoOfVote(noOfVote + 1)}
         >
           <svg width="11" height="11" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -30,10 +28,7 @@ const Upvote = ({ existingScore, id, isEditing }) => {
 
         <button
           onClick={() =>
-            isEditing === false &&
-            canVote &&
-            noOfVote > 0 &&
-            setNoOfVote(noOfVote - 1)
+            isEditing === false && noOfVote > 0 && setNoOfVote(noOfVote - 1)
           }
         >
           <svg width="11" height="11" xmlns="http://www.w3.org/2000/svg">
