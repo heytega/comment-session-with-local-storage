@@ -13,10 +13,12 @@ const AppContext = React.createContext();
 export const AppProvider = ({ children }) => {
   // data initialization
   const [comments, setComments] = useState(commentData);
+
   // const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(currentUserData);
   const [edit, setEdit] = useState(false);
   const [processEdit, setProcessEdit] = useState(false);
+
   // const [reply, setReply] = useState(false);
 
   // methods and functions
@@ -37,6 +39,12 @@ export const AppProvider = ({ children }) => {
 
   const editComment = (id) => {
     setEdit(comments.find((comment) => comment.id === id));
+    setProcessEdit(true);
+  };
+
+  const editReply = (commentId, replyId) => {
+    const mainComment = comments.find((comment) => comment.id == commentId);
+    setEdit(mainComment.find((reply) => reply.id === replyId));
     setProcessEdit(true);
   };
 
@@ -75,14 +83,11 @@ export const AppProvider = ({ children }) => {
         currentUser,
         edit,
         processEdit,
-        // reply,
-        // loading,
         addComment,
         removeComment,
         updateComment,
         editComment,
         endProcess,
-        // handleReply,
         addReply,
       }}
     >
