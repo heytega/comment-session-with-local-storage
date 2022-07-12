@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import ControlButtons from "./ControlButtons";
 import Identity from "./Identity";
-import Replies from "./Replies";
+import Reply from "./Reply";
 import ReplyForm from "./ReplyForm";
 import Upvote from "./Upvote";
-import { useGlobalContext } from "./context";
+import EditTemplate from "./EditTemplate";
 
 const Comment = ({
   id,
@@ -16,32 +16,11 @@ const Comment = ({
   edited,
   isEditing,
 }) => {
-  const { updateComment, endProcess } = useGlobalContext();
-
   const [readMore, setReadMore] = useState(false);
   const [reply, setReply] = useState(false);
-  const [editContent, setEditContent] = useState(content);
 
   const handleReply = () => {
     return setReply(!reply);
-  };
-
-  const handleEdit = (e) => {
-    e.preventDefault();
-
-    if (editContent !== content && editContent.length > 0) {
-      const updatedComment = { id, createdAt, score, user, replies, edited };
-      updateComment({
-        ...updatedComment,
-        content: editContent,
-        edited: "Edited",
-      });
-      endProcess();
-    }
-
-    if (editContent === content) {
-      endProcess();
-    }
   };
 
   return (
@@ -65,29 +44,15 @@ const Comment = ({
         />
 
         {isEditing ? (
-          <section className="textArea edit-textArea">
-            <form>
-              <div>
-                <textarea
-                  className="input"
-                  value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                ></textarea>
-              </div>
-              <div className="buttonContainer">
-                <button className="cancel" onClick={() => endProcess()}>
-                  CANCEL
-                </button>
-                <button
-                  className="update"
-                  type="submit"
-                  onClick={(e) => handleEdit(e)}
-                >
-                  UPDATE
-                </button>
-              </div>
-            </form>
-          </section>
+          <EditTemplate
+            content={content}
+            id={id}
+            createdAt={createdAt}
+            score={score}
+            user={user}
+            replies={replies}
+            edited={edited}
+          />
         ) : (
           <section className={readMore ? "readMore-textArea" : "textArea"}>
             {readMore ? content : `${content.substring(0, 210)}`}
@@ -109,7 +74,7 @@ const Comment = ({
       <div className="reply-template">
         {replies.map((reply) => {
           return (
-            <Replies
+            <Reply
               key={reply.id}
               {...reply}
               isEditing={isEditing}

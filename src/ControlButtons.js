@@ -17,6 +17,7 @@ const ControlButtons = ({
     if (handleReply) {
       handleReply();
     }
+
     if (handleInnerReply) {
       handleInnerReply();
     }

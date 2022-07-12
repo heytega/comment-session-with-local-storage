@@ -2,9 +2,17 @@
 import { useState } from "react";
 import { useGlobalContext } from "./context";
 
-const ReplyForm = ({ commentId, commentAuthor, handleReply }) => {
+const ReplyForm = ({
+  commentId,
+  commentAuthor,
+  handleReply,
+  replyingTo,
+  innerReply,
+  handleInnerReply,
+}) => {
   const { currentUser, addReply } = useGlobalContext();
 
+  // const [content, setContent] = useState(innerReply ? `@${replyingTo} ` : "");
   const [content, setContent] = useState("");
 
   const handleSubmit = async (e) => {
@@ -21,9 +29,27 @@ const ReplyForm = ({ commentId, commentAuthor, handleReply }) => {
     handleReply();
   };
 
+  const handleReplySubmit = async (e) => {
+    e.preventDefault();
+    await addReply(commentId, {
+      id: new Date().getTime(),
+      content,
+      createdAt: new Date().toISOString(),
+      score: 0,
+      user: currentUser,
+      replyingTo,
+    });
+
+    setContent("");
+    handleInnerReply();
+  };
+
   return (
     <div>
-      <form className="form card" onSubmit={handleSubmit}>
+      <form
+        className="form card"
+        onSubmit={innerReply ? handleReplySubmit : handleSubmit}
+      >
         <img src={currentUser.image.png} alt="avi" className="profile-img" />
         <textarea
           type="text"

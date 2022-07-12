@@ -1,3 +1,7 @@
+*{
+  scroll-behavior: smooth;
+}
+
 .header {
   font-weight: 700;
   font-family: 'Rubik';
@@ -20,6 +24,8 @@
  column-gap: 10px;
  align-items: center;
  padding: 15px 10px 10px 0px;
+ animation: slideInFromBottom 0.2s ease-out;
+ transition: 0.2s;
 }
 
 
@@ -396,6 +402,21 @@ font-size: 18px;
 
 .form button:hover {
   background: hsl(239, 57%, 85%);
+}
+
+/* Animation */
+@keyframes slideInFromBottom {
+  0% {
+    transform: translateY(10%);
+  }
+
+  90% {
+    transfrom: translateY(-10%)
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
 }
 
 @media screen and (max-width:1000px) {

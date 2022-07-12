@@ -3,10 +3,11 @@ import { useState } from "react";
 import ControlButtons from "./ControlButtons";
 import Identity from "./Identity";
 import Upvote from "./Upvote";
-import Form from "./Form";
+import ReplyForm from "./ReplyForm";
 import { useGlobalContext } from "./context";
+import EditTemplate from "./EditTemplate";
 
-function Replies({
+function Reply({
   id,
   content,
   createdAt,
@@ -14,6 +15,7 @@ function Replies({
   replyingTo,
   user,
   isEditing,
+  commentId,
 }) {
   // custom hook
   const { currentUser, removeComment } = useGlobalContext();
@@ -42,20 +44,31 @@ function Replies({
           handleInnerReply={handleInnerReply}
         />
 
-        <section className={innerReadMore ? "readMore-textArea" : "textArea"}>
-          <p className="replyingTo">{`@${replyingTo} `}</p>
-          {innerReadMore ? content : `${content.substring(0, 220)}`}
+        {isEditing ? (
+          <EditTemplate />
+        ) : (
+          <section className={innerReadMore ? "readMore-textArea" : "textArea"}>
+            <p className="replyingTo">{`@${replyingTo} `}</p>
+            {innerReadMore ? content : `${content.substring(0, 220)}`}
 
-          {content.length > content.substring(0, 220).length && (
-            <button onClick={() => setInnerReadMore(!innerReadMore)}>
-              {innerReadMore ? "...Show Less" : "...Read More"}
-            </button>
-          )}
-        </section>
+            {content.length > content.substring(0, 220).length && (
+              <button onClick={() => setInnerReadMore(!innerReadMore)}>
+                {innerReadMore ? "...Show Less" : "...Read More"}
+              </button>
+            )}
+          </section>
+        )}
       </div>
-      {innerReply && <Form currentUser={currentUser} />}
+      {innerReply && (
+        <ReplyForm
+          replyingTo={user.username}
+          innerReply={innerReply}
+          handleInnerReply={handleInnerReply}
+          commentId={commentId}
+        />
+      )}
     </>
   );
 }
 
-export default Replies;
+export default Reply;
