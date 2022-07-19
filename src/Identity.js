@@ -18,7 +18,7 @@ const Identity = ({ user, createdAt, edited }) => {
 
   return (
     <section className="identity">
-      <img src={user.image.png} alt="avi" className="profile-img" />
+      <img src={user.image} alt="avi" className="profile-img" />
       <h4>{user.username}</h4>
       {user.username === currentUser.username && (
         <h6 className="indicator">YOU</h6>

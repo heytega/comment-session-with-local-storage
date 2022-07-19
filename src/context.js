@@ -13,11 +13,13 @@ const AppContext = React.createContext();
 export const AppProvider = ({ children }) => {
   // data initialization
   const [comments, setComments] = useState(commentData);
+  // console.log(comments.replies);
 
   // const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(currentUserData);
-  const [edit, setEdit] = useState(false);
-  const [processEdit, setProcessEdit] = useState(false);
+  // const [isEditing, setIsEditing] = useState(false);
+  const [replyEdit, setReplyEdit] = useState(false);
+  // const [processEdit, setProcessEdit] = useState(false);
 
   // const [reply, setReply] = useState(false);
 
@@ -32,30 +34,50 @@ export const AppProvider = ({ children }) => {
     setComments(newComment);
   };
 
+  const removeReply = (commentId, replyId) => {
+    const restOfComments = comments.map((comment) => comment.id !== commentId);
+    const mainComment = comments.find((comment) => comment.id === commentId);
+    const restOfReplies = mainComment.replies.filter(
+      (reply) => reply.id !== replyId
+    );
+    const freshComment = {
+      ...mainComment,
+      replies: [...restOfReplies],
+    };
+    setComments([...restOfComments, freshComment]);
+  };
+
   const updateComment = (updatedComment) => {
     const prevComment = comments.filter((c) => c.id !== updatedComment.id);
     setComments([...prevComment, updatedComment]);
   };
 
-  const editComment = (id) => {
-    setEdit(comments.find((comment) => comment.id === id));
-    setProcessEdit(true);
-  };
-
-  const editReply = (commentId, replyId) => {
-    const mainComment = comments.find((comment) => comment.id == commentId);
-    setEdit(mainComment.find((reply) => reply.id === replyId));
-    setProcessEdit(true);
-  };
-
   // const editComment = () => {
-  //   setEdit(true);
+  //   setIsEditing(true);
   //   setProcessEdit(true);
   // };
 
+  // const editReply = (commentId, replyId) => {
+  //   const mainComment = comments.find((comment) => comment.id === commentId);
+  //   setReplyEdit(mainComment.replies.find((reply) => reply.id === replyId));
+  //   setProcessEdit(true);
+  // };
+
+  // const toggleReplyEdit = () => {
+  //   setReplyEdit(!replyEdit);
+  //   setProcessEdit(true);
+  // };
+
+  const toggleReplyEdit = (commentId, replyId) => {
+    const mainComment = comments.find((comment) => comment.id === commentId);
+    setReplyEdit(mainComment.replies.find((reply) => reply.id === replyId));
+    // setProcessEdit(true);
+  };
+
   const endProcess = () => {
-    setProcessEdit(false);
-    setEdit(false);
+    // setProcessEdit(false);
+    setReplyEdit(false);
+    // setEdit(false);
   };
 
   // const handleReply = () => {
@@ -81,14 +103,15 @@ export const AppProvider = ({ children }) => {
       value={{
         comments,
         currentUser,
-        edit,
-        processEdit,
+        replyEdit,
         addComment,
         removeComment,
         updateComment,
-        editComment,
         endProcess,
         addReply,
+        // editReply,
+        toggleReplyEdit,
+        removeReply,
       }}
     >
       {children}

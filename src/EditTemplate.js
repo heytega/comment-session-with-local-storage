@@ -9,8 +9,9 @@ const EditTemplate = ({
   user,
   replies,
   edited,
+  endProcess,
 }) => {
-  const { updateComment, endProcess } = useGlobalContext();
+  const { updateComment } = useGlobalContext();
 
   const [editContent, setEditContent] = useState(content);
 

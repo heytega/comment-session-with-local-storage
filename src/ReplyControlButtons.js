@@ -2,17 +2,17 @@ import React from "react";
 import { useState } from "react";
 import { useGlobalContext } from "./context";
 
-const ControlButtons = ({
+const ReplyControlButtons = ({
+  isReplyEditing,
   id,
+  commentId,
   user,
-  startEdit,
-  isEditing,
   handleReply,
   handleInnerReply,
 }) => {
-  const { currentUser, removeComment } = useGlobalContext();
+  const { currentUser, removeReply, toggleReplyEdit } = useGlobalContext();
 
-  const [showDeleteDialogue, setShowDeleteDialogue] = useState(false);
+  const [showReplyDeleteDialogue, setShowReplyDeleteDialogue] = useState(false);
 
   const showFunction = () => {
     if (handleReply) {
@@ -24,13 +24,9 @@ const ControlButtons = ({
     }
   };
 
-  const handleStartEdit = () => {
-    startEdit();
-  };
-
-  const handleConfirmDelete = (id) => {
-    removeComment(id);
-    setShowDeleteDialogue(false);
+  const handleConfirmDelete = () => {
+    removeReply(commentId, id);
+    setShowReplyDeleteDialogue(false);
   };
 
   return (
@@ -38,14 +34,16 @@ const ControlButtons = ({
       {user.username === currentUser.username ? (
         <div
           className={
-            isEditing
+            isReplyEditing
               ? "currentUser-btn comment-btn hideActionBtn"
               : "currentUser-btn comment-btn"
           }
         >
           <button
             className="comment-btn delete-btn"
-            onClick={() => isEditing === false && setShowDeleteDialogue(true)}
+            onClick={() =>
+              isReplyEditing === false && setShowReplyDeleteDialogue(true)
+            }
           >
             <svg width="12" height="14" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -57,7 +55,7 @@ const ControlButtons = ({
           </button>
           <button
             className="comment-btn edit-btn"
-            onClick={() => handleStartEdit()}
+            onClick={() => toggleReplyEdit(commentId, id)}
           >
             <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -83,7 +81,7 @@ const ControlButtons = ({
         </button>
       )}
 
-      {showDeleteDialogue && (
+      {showReplyDeleteDialogue && (
         <div className="confirmDelete">
           <section className="deleteTemplate card">
             <h4>Delete comment</h4>
@@ -94,13 +92,13 @@ const ControlButtons = ({
             <div>
               <button
                 className="cancel"
-                onClick={() => setShowDeleteDialogue(false)}
+                onClick={() => setShowReplyDeleteDialogue(false)}
               >
                 NO, CANCEL
               </button>
               <button
                 className="deleteComment"
-                onClick={() => handleConfirmDelete(id)}
+                onClick={() => handleConfirmDelete()}
               >
                 YES, DELETE
               </button>
@@ -112,4 +110,4 @@ const ControlButtons = ({
   );
 };
 
-export default ControlButtons;
+export default ReplyControlButtons;

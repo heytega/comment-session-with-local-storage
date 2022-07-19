@@ -1,24 +1,23 @@
 import React from "react";
 import { useState } from "react";
-import ControlButtons from "./ControlButtons";
+import ReplyControlButtons from "./ReplyControlButtons";
 import Identity from "./Identity";
 import Upvote from "./Upvote";
 import ReplyForm from "./ReplyForm";
 import { useGlobalContext } from "./context";
-import EditTemplate from "./EditTemplate";
 
-function Reply({
+const Reply = ({
   id,
   content,
   createdAt,
   score,
   replyingTo,
   user,
-  isEditing,
   commentId,
-}) {
+}) => {
   // custom hook
-  const { currentUser, removeComment } = useGlobalContext();
+  const { currentUser, updateComment, endProcess, replyEdit } =
+    useGlobalContext();
 
   // data & modifiers
   const [innerReadMore, setInnerReadMore] = useState(false);
@@ -29,23 +28,76 @@ function Reply({
     return setInnerReply(!innerReply);
   };
 
+  // FUNCTIONS AND METHODS FOR EDITING REPLIES
+  const [editReplyContent, setEditReplyContent] = useState(content);
+  const [isReplyEditing, setIsReplyEditing] = useState(
+    replyEdit && replyEdit.id === id
+  );
+
+  const handleEdit = (e) => {
+    e.preventDefault();
+    if (editReplyContent !== content && editReplyContent.length > 0) {
+      const updatedComment = { id, createdAt, score, user };
+      updateComment({
+        ...updatedComment,
+        content: editReplyContent,
+        edited: "Edited",
+      });
+      endProcess();
+    }
+
+    if (editReplyContent === content) {
+      endProcess();
+    }
+  };
+
   // Rendering
   return (
     <>
-      <div className="comment-template card">
-        <Upvote existingScore={score} id={id} isEditing={isEditing} />
+      <div
+        className={
+          replyEdit && replyEdit.id === id
+            ? "editComment-template card"
+            : "comment-template card"
+        }
+      >
+        <Upvote existingScore={score} id={id} isEditing={isReplyEditing} />
 
         <Identity currentUser={currentUser} user={user} createdAt={createdAt} />
 
-        <ControlButtons
+        <ReplyControlButtons
           currentUser={currentUser}
           user={user}
-          removeComment={removeComment}
           handleInnerReply={handleInnerReply}
+          isReplyEditing={isReplyEditing}
+          id={id}
+          commentId={commentId}
         />
 
-        {isEditing ? (
-          <EditTemplate />
+        {isReplyEditing ? (
+          <section className="textArea edit-textArea">
+            <form>
+              <div>
+                <textarea
+                  className="input"
+                  value={editReplyContent}
+                  onChange={(e) => setEditReplyContent(e.target.value)}
+                ></textarea>
+              </div>
+              <div className="buttonContainer">
+                <button className="cancel" onClick={() => endProcess()}>
+                  CANCEL
+                </button>
+                <button
+                  className="update"
+                  type="submit"
+                  onClick={(e) => handleEdit(e)}
+                >
+                  UPDATE
+                </button>
+              </div>
+            </form>
+          </section>
         ) : (
           <section className={innerReadMore ? "readMore-textArea" : "textArea"}>
             <p className="replyingTo">{`@${replyingTo} `}</p>
@@ -69,6 +121,6 @@ function Reply({
       )}
     </>
   );
-}
+};
 
 export default Reply;

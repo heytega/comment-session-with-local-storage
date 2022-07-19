@@ -5,22 +5,24 @@ import Reply from "./Reply";
 import ReplyForm from "./ReplyForm";
 import Upvote from "./Upvote";
 import EditTemplate from "./EditTemplate";
+import { useGlobalContext } from "./context";
 
-const Comment = ({
-  id,
-  content,
-  createdAt,
-  score,
-  user,
-  replies,
-  edited,
-  isEditing,
-}) => {
+const Comment = ({ id, content, createdAt, score, user, replies, edited }) => {
+  // const { isEditing } = useGlobalContext();
   const [readMore, setReadMore] = useState(false);
   const [reply, setReply] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleReply = () => {
     return setReply(!reply);
+  };
+
+  const startEdit = () => {
+    setIsEditing(true);
+  };
+
+  const endProcess = () => {
+    setIsEditing(false);
   };
 
   return (
@@ -41,6 +43,7 @@ const Comment = ({
           id={id}
           user={user}
           handleReply={handleReply}
+          startEdit={startEdit}
         />
 
         {isEditing ? (
@@ -52,6 +55,7 @@ const Comment = ({
             user={user}
             replies={replies}
             edited={edited}
+            endProcess={endProcess}
           />
         ) : (
           <section className={readMore ? "readMore-textArea" : "textArea"}>
@@ -73,14 +77,7 @@ const Comment = ({
       )}
       <div className="reply-template">
         {replies.map((reply) => {
-          return (
-            <Reply
-              key={reply.id}
-              {...reply}
-              isEditing={isEditing}
-              commentId={id}
-            />
-          );
+          return <Reply key={reply.id} {...reply} commentId={id} />;
         })}
       </div>
     </>

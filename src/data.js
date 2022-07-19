@@ -1,7 +1,11 @@
+import amyrobson from "./images/avatars/image-amyrobson.png";
+import ramsesmiron from "./images/avatars/image-ramsesmiron.png";
+import maxblagun from "./images/avatars/image-maxblagun.png";
+import juliusomo from "./images/avatars/image-juliusomo.png";
+
 const data = {
   currentUser: {
-    image:
-      "https://res.cloudinary.com/diqqf3eq2/image/upload/v1586883417/person-3_ipa0mj.jpg",
+    image: juliusomo,
     username: "juliusomo",
   },
 
@@ -13,8 +17,7 @@ const data = {
       createdAt: "1 month ago",
       score: 12,
       user: {
-        image:
-          "https://res.cloudinary.com/diqqf3eq2/image/upload/v1595959131/person-2_ipcjws.jpg",
+        image: amyrobson,
         username: "amyrobson",
       },
 
@@ -28,8 +31,7 @@ const data = {
       createdAt: "2 weeks ago",
       score: 5,
       user: {
-        image:
-          "https://res.cloudinary.com/diqqf3eq2/image/upload/v1586883423/person-4_t9nxjt.jpg",
+        image: maxblagun,
         username: "maxblagun",
       },
 
@@ -42,8 +44,7 @@ const data = {
           score: 4,
           replyingTo: "maxblagun",
           user: {
-            image:
-              "https://res.cloudinary.com/diqqf3eq2/image/upload/v1586883334/person-1_rfzshl.jpg",
+            image: ramsesmiron,
             username: "ramsesmiron",
           },
         },
@@ -56,8 +57,7 @@ const data = {
           score: 2,
           replyingTo: "ramsesmiron",
           user: {
-            image:
-              "https://res.cloudinary.com/diqqf3eq2/image/upload/v1586883417/person-3_ipa0mj.jpg",
+            image: juliusomo,
             username: "juliusomo",
           },
         },
