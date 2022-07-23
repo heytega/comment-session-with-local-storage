@@ -1,25 +1,30 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import data from "./data";
 
 // Database
 const commentData = data.comments;
-// console.log(commentData);
 
-const currentUserData = data.currentUser;
+console.log(commentData);
+
+const currentUser = data.currentUser;
 // console.log(currentUserData);
 
 const AppContext = React.createContext();
 
 export const AppProvider = ({ children }) => {
   // data initialization
-  const [comments, setComments] = useState(commentData);
-  // console.log(comments.replies);
+  const [comments, setComments] = useState(() => {
+    const localData = localStorage.getItem("comments");
+    return localData ? JSON.parse(localData) : commentData;
+  });
 
-  // const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(currentUserData);
-  // const [isEditing, setIsEditing] = useState(false);
+  // const [currentUser, setCurrentUser] = useState(currentUserData);
   const [replyEdit, setReplyEdit] = useState(false);
   // const [processEdit, setProcessEdit] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("comments", JSON.stringify(comments));
+  }, [comments]);
 
   // const [reply, setReply] = useState(false);
 
@@ -42,31 +47,30 @@ export const AppProvider = ({ children }) => {
     );
     const freshComment = {
       ...mainComment,
-      replies: [...restOfReplies],
+      replies: restOfReplies,
     };
-    setComments([...restOfComments, freshComment]);
+    const index = comments.findIndex((comment) => comment.id === commentId);
+
+    const newCommentArray = restOfComments.splice(index, 0, freshComment);
+    setComments(newCommentArray);
   };
 
   const updateComment = (updatedComment) => {
+    const index = comments.findIndex(
+      (comment) => comment.id === updatedComment.id
+    );
+    console.log(index);
     const prevComment = comments.filter((c) => c.id !== updatedComment.id);
-    setComments([...prevComment, updatedComment]);
+    const redoComments = prevComment.splice(index, 0, updatedComment);
+    setComments(redoComments);
   };
 
-  // const editComment = () => {
-  //   setIsEditing(true);
-  //   setProcessEdit(true);
-  // };
-
-  // const editReply = (commentId, replyId) => {
-  //   const mainComment = comments.find((comment) => comment.id === commentId);
-  //   setReplyEdit(mainComment.replies.find((reply) => reply.id === replyId));
-  //   setProcessEdit(true);
-  // };
-
-  // const toggleReplyEdit = () => {
-  //   setReplyEdit(!replyEdit);
-  //   setProcessEdit(true);
-  // };
+  const handleCommentUpvote = (id, noOfVote) => {
+    const newCommentArray = comments.map((c) =>
+      c.id === id ? { ...c, score: noOfVote } : c
+    );
+    setComments(newCommentArray);
+  };
 
   const toggleReplyEdit = (commentId, replyId) => {
     const mainComment = comments.find((comment) => comment.id === commentId);
@@ -109,9 +113,9 @@ export const AppProvider = ({ children }) => {
         updateComment,
         endProcess,
         addReply,
-        // editReply,
         toggleReplyEdit,
         removeReply,
+        handleCommentUpvote,
       }}
     >
       {children}

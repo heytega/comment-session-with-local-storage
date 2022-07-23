@@ -50,7 +50,7 @@ const ReplyForm = ({
         className="form card"
         onSubmit={innerReply ? handleReplySubmit : handleSubmit}
       >
-        <img src={currentUser.image.png} alt="avi" className="profile-img" />
+        <img src={currentUser.image} alt="avi" className="profile-img" />
         <textarea
           type="text"
           className="input"

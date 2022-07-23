@@ -26,7 +26,7 @@ const Comment = ({ id, content, createdAt, score, user, replies, edited }) => {
   };
 
   return (
-    <>
+    <div key={id}>
       <div
         className={
           isEditing ? "editComment-template card" : "comment-template card"
@@ -58,14 +58,14 @@ const Comment = ({ id, content, createdAt, score, user, replies, edited }) => {
             endProcess={endProcess}
           />
         ) : (
-          <section className={readMore ? "readMore-textArea" : "textArea"}>
-            {readMore ? content : `${content.substring(0, 210)}`}
+          <div className={readMore ? "readMore-textArea" : "textArea"}>
+            {readMore ? content : content.substring(0, 210)}
             {content.length > content.substring(0, 210).length && (
               <button onClick={() => setReadMore(!readMore)}>
                 {readMore ? "...Show Less" : "...Read More"}
               </button>
             )}
-          </section>
+          </div>
         )}
       </div>
       {reply && (
@@ -77,10 +77,10 @@ const Comment = ({ id, content, createdAt, score, user, replies, edited }) => {
       )}
       <div className="reply-template">
         {replies.map((reply) => {
-          return <Reply key={reply.id} {...reply} commentId={id} />;
+          return <Reply {...reply} commentId={id} />;
         })}
       </div>
-    </>
+    </div>
   );
 };
 

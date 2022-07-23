@@ -53,7 +53,7 @@ const Reply = ({
 
   // Rendering
   return (
-    <>
+    <div key={id}>
       <div
         className={
           replyEdit && replyEdit.id === id
@@ -119,7 +119,7 @@ const Reply = ({
           commentId={commentId}
         />
       )}
-    </>
+    </div>
   );
 };
 

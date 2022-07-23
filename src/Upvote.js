@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useGlobalContext } from "./context";
 
 const Upvote = ({ existingScore, id, isEditing }) => {
+  const { handleCommentUpvote } = useGlobalContext();
   const [noOfVote, setNoOfVote] = useState(existingScore);
   // const [canVote, setCanVote] = useState(true);
 
+  useEffect(() => {
+    handleCommentUpvote(id, noOfVote);
+  }, [noOfVote]);
   // const downVote = () => {
   //   if (canVote && noOfVote > 0) {
   //     setNoOfVote(noOfVote - 1);
@@ -11,7 +16,7 @@ const Upvote = ({ existingScore, id, isEditing }) => {
   // };
 
   return (
-    <section className={isEditing ? "upvote hideUpvote" : "upvote"}>
+    <section className={isEditing ? "upvote hideUpvote" : "upvote"} key={id}>
       <div className="upvote-button">
         <button
           onClick={() => isEditing === false && setNoOfVote(noOfVote + 1)}
