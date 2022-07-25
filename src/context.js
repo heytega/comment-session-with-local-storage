@@ -4,7 +4,7 @@ import data from "./data";
 // Database
 const commentData = data.comments;
 
-console.log(commentData);
+// console.log(commentData);
 
 const currentUser = data.currentUser;
 // console.log(currentUserData);
@@ -40,29 +40,41 @@ export const AppProvider = ({ children }) => {
   };
 
   const removeReply = (commentId, replyId) => {
-    const restOfComments = comments.map((comment) => comment.id !== commentId);
-    const mainComment = comments.find((comment) => comment.id === commentId);
-    const restOfReplies = mainComment.replies.filter(
-      (reply) => reply.id !== replyId
-    );
-    const freshComment = {
-      ...mainComment,
-      replies: restOfReplies,
-    };
-    const index = comments.findIndex((comment) => comment.id === commentId);
+    try {
+      const mainComment = comments.find((c) => c.id === commentId);
+      console.log(mainComment);
 
-    const newCommentArray = restOfComments.splice(index, 0, freshComment);
-    setComments(newCommentArray);
+      const newReplies = mainComment.replies.filter((c) => c.id !== replyId);
+      console.log(newReplies);
+
+      const restOfComments = comments.map((c) =>
+        c.id === commentId ? { ...mainComment, replies: newReplies } : c
+      );
+      // console.log(restOfComments);
+      setComments(restOfComments);
+      console.log("the function works");
+    } catch (error) {
+      // console.log(error);
+    }
   };
 
   const updateComment = (updatedComment) => {
-    const index = comments.findIndex(
-      (comment) => comment.id === updatedComment.id
+    const updatedComments = comments.map((c) =>
+      c.id === updatedComment.id ? updatedComment : c
     );
-    console.log(index);
-    const prevComment = comments.filter((c) => c.id !== updatedComment.id);
-    const redoComments = prevComment.splice(index, 0, updatedComment);
-    setComments(redoComments);
+    setComments(updatedComments);
+  };
+
+  const updateReplyComment = (updatedReplyComment, commentId) => {
+    const mainComment = comments.find((c) => c.id === commentId);
+    const newReplies = mainComment.replies.map((c) =>
+      c.id === updatedReplyComment.id ? updatedReplyComment : c
+    );
+    const newMainComment = { ...mainComment, replies: newReplies };
+    const updatedCommentsArray = comments.map((c) =>
+      c.id === commentId ? newMainComment : c
+    );
+    setComments(updatedCommentsArray);
   };
 
   const handleCommentUpvote = (id, noOfVote) => {
@@ -72,11 +84,38 @@ export const AppProvider = ({ children }) => {
     setComments(newCommentArray);
   };
 
-  const toggleReplyEdit = (commentId, replyId) => {
-    const mainComment = comments.find((comment) => comment.id === commentId);
-    setReplyEdit(mainComment.replies.find((reply) => reply.id === replyId));
-    // setProcessEdit(true);
+  const handleReplyUpvote = (commentId, id, noOfVote) => {
+    // find the comment which the reply to be updated is under
+    const mainComment = comments.find((c) => c.id === commentId);
+
+    // find the target reply under the comment;
+    const targetReply = mainComment.replies.find((c) => c.id === id);
+
+    // update the score of the reply;
+    const updateReplyVote = { ...targetReply, score: noOfVote };
+
+    // replace the pre-existing reply with the updated reply in the replies array
+    const newReplyArray = mainComment.replies.map((c) =>
+      c.id === id ? updateReplyVote : c
+    );
+
+    // attach the modified replies array to rest properties of the head comment
+    const newMainComment = { ...mainComment, replies: newReplyArray };
+
+    // replace the pre-existing comment with the modified comments in the main comments Array
+    const updatedCommentsArray = comments.map((c) =>
+      c.id === commentId ? newMainComment : c
+    );
+
+    // update the state.
+    setComments(updatedCommentsArray);
   };
+
+  // const toggleReplyEdit = (commentId, replyId) => {
+  //   const mainComment = comments.find((comment) => comment.id === commentId);
+  //   setReplyEdit(mainComment.replies.find((reply) => reply.id === replyId));
+  //   // setProcessEdit(true);
+  // };
 
   const endProcess = () => {
     // setProcessEdit(false);
@@ -113,9 +152,10 @@ export const AppProvider = ({ children }) => {
         updateComment,
         endProcess,
         addReply,
-        toggleReplyEdit,
+        updateReplyComment,
         removeReply,
         handleCommentUpvote,
+        handleReplyUpvote,
       }}
     >
       {children}

@@ -6,24 +6,48 @@ const EditTemplate = ({
   content,
   createdAt,
   score,
+  replyingTo,
   user,
   replies,
   edited,
+  isEditing,
+  isReplyEditing,
   endProcess,
+  commentId,
 }) => {
-  const { updateComment } = useGlobalContext();
+  const { updateComment, updateReplyComment } = useGlobalContext();
 
   const [editContent, setEditContent] = useState(content);
 
   const handleEdit = (e) => {
     e.preventDefault();
     if (editContent !== content && editContent.length > 0) {
-      const updatedComment = { id, createdAt, score, user, replies, edited };
-      updateComment({
-        ...updatedComment,
-        content: editContent,
-        edited: "Edited",
-      });
+      if (isEditing) {
+        const updatedComment = { id, createdAt, score, user, replies, edited };
+        updateComment({
+          ...updatedComment,
+          content: editContent,
+          edited: "Edited",
+        });
+      }
+      if (isReplyEditing) {
+        const updatedComment = {
+          id,
+          createdAt,
+          score,
+          user,
+          replyingTo,
+          edited,
+        };
+        updateReplyComment(
+          {
+            ...updatedComment,
+            content: editContent,
+            edited: "Edited",
+          },
+          commentId
+        );
+      }
       endProcess();
     }
 

@@ -9,8 +9,9 @@ const ReplyControlButtons = ({
   user,
   handleReply,
   handleInnerReply,
+  startReplyEdit,
 }) => {
-  const { currentUser, removeReply, toggleReplyEdit } = useGlobalContext();
+  const { currentUser, removeReply } = useGlobalContext();
 
   const [showReplyDeleteDialogue, setShowReplyDeleteDialogue] = useState(false);
 
@@ -24,7 +25,11 @@ const ReplyControlButtons = ({
     }
   };
 
-  const handleConfirmDelete = () => {
+  const handleStartReplyEdit = () => {
+    startReplyEdit();
+  };
+
+  const handleConfirmDeleteReply = () => {
     removeReply(commentId, id);
     setShowReplyDeleteDialogue(false);
   };
@@ -55,7 +60,7 @@ const ReplyControlButtons = ({
           </button>
           <button
             className="comment-btn edit-btn"
-            onClick={() => toggleReplyEdit(commentId, id)}
+            onClick={() => handleStartReplyEdit()}
           >
             <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -98,7 +103,7 @@ const ReplyControlButtons = ({
               </button>
               <button
                 className="deleteComment"
-                onClick={() => handleConfirmDelete()}
+                onClick={() => handleConfirmDeleteReply()}
               >
                 YES, DELETE
               </button>

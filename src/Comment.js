@@ -5,13 +5,15 @@ import Reply from "./Reply";
 import ReplyForm from "./ReplyForm";
 import Upvote from "./Upvote";
 import EditTemplate from "./EditTemplate";
-import { useGlobalContext } from "./context";
+// import { useGlobalContext } from "./context";
 
 const Comment = ({ id, content, createdAt, score, user, replies, edited }) => {
   // const { isEditing } = useGlobalContext();
   const [readMore, setReadMore] = useState(false);
   const [reply, setReply] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const shortContent = content.substring(0, 210);
 
   const handleReply = () => {
     return setReply(!reply);
@@ -50,6 +52,7 @@ const Comment = ({ id, content, createdAt, score, user, replies, edited }) => {
           <EditTemplate
             content={content}
             id={id}
+            isEditing={isEditing}
             createdAt={createdAt}
             score={score}
             user={user}
@@ -59,8 +62,8 @@ const Comment = ({ id, content, createdAt, score, user, replies, edited }) => {
           />
         ) : (
           <div className={readMore ? "readMore-textArea" : "textArea"}>
-            {readMore ? content : content.substring(0, 210)}
-            {content.length > content.substring(0, 210).length && (
+            {readMore ? content : shortContent}
+            {content.length > shortContent.length && (
               <button onClick={() => setReadMore(!readMore)}>
                 {readMore ? "...Show Less" : "...Read More"}
               </button>
