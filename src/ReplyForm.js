@@ -17,31 +17,42 @@ const ReplyForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addReply(commentId, {
-      id: new Date().getTime(),
-      content,
-      createdAt: new Date().toISOString(),
-      score: 0,
-      user: currentUser,
-      replyingTo: commentAuthor,
-    });
-    setContent("");
-    handleReply();
+    if (content.length > 0) {
+      await addReply(commentId, {
+        id: new Date().getTime(),
+        content,
+        createdAt: new Date().toISOString(),
+        score: 0,
+        user: currentUser,
+        replyingTo: commentAuthor,
+      });
+      setContent("");
+      handleReply();
+    }
+    if (content.length === 0) {
+      handleReply();
+    }
   };
 
   const handleReplySubmit = async (e) => {
     e.preventDefault();
-    await addReply(commentId, {
-      id: new Date().getTime(),
-      content,
-      createdAt: new Date().toISOString(),
-      score: 0,
-      user: currentUser,
-      replyingTo,
-    });
+    if (content.length > 0) {
+      await addReply(commentId, {
+        id: new Date().getTime(),
+        content,
+        createdAt: new Date().toISOString(),
+        score: 0,
+        user: currentUser,
+        replyingTo,
+      });
 
-    setContent("");
-    handleInnerReply();
+      setContent("");
+      handleInnerReply();
+    }
+
+    if (content.length === 0) {
+      handleInnerReply();
+    }
   };
 
   return (
